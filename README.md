@@ -51,6 +51,19 @@ See the built-in **Help** page for detailed recording instructions and console c
 
 [MIT](LICENSE) — Copyright 2024-2026 Nollid
 
+## AI Assistance Disclosure
+
+This project was developed with the assistance of AI tools.
+
+The application architecture, feature design, workflow systems, and development direction were created and directed by **Nollid**. AI (Claude) was used as a programming assistant to help generate portions of the codebase during development.
+
+All implementation decisions, feature specifications, debugging, testing, and final integration were performed and overseen by the project author.
+
+AI assistance functioned as a **coding accelerator**, similar to a pair-programming tool, while overall design, functionality, and project direction remain human-led.
+
+That doesn't mean it's a good job. I'm using this as a learning experience and totally open for citisism and tweaks. I've spent several weeks working on this and I want it to be a super funcitonal and easy to use tool that creators love to use, not just some slop tool.
+
+
 ## Credits
 
 Built by **Nollid** ([@NollidOfficial](https://youtube.com/@NollidOfficial))
