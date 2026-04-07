@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS|Studio — Map Guide Tool Help</title>
+<style>
+:root{
+  --bg:#0d1117;--panel:#161b22;--card:#1c2128;--card2:#21262d;
+  --border:#30363d;--text:#e6edf3;--muted:#7d8590;
+  --accent:#58a6ff;--green:#3fb950;--red:#f85149;--orange:#d29922;
+  --purple:#a371f7;--teal:#1d9e75;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6}
+
+/* ── Header ── */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 24px;background:var(--panel);
+  border-bottom:1px solid var(--border);
+}
+.brand{font-size:15px;font-weight:800;letter-spacing:-.4px}
+.brand span{color:var(--accent)}
+.brand-sub{font-size:10px;color:var(--muted);margin-left:3px;font-weight:400}
+.header-badge{
+  font-size:11px;padding:2px 8px;border-radius:10px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--muted);
+}
+.sp{flex:1}
+.back-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:4px;font-size:12px;
+  border:1px solid var(--border);background:var(--card);
+  color:var(--text);text-decoration:none;
+  transition:border-color .15s,color .15s;
+}
+.back-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Layout ── */
+.page{display:flex;max-width:1200px;margin:0 auto;padding:0 24px;gap:32px}
+.sidebar{
+  width:220px;flex-shrink:0;
+  position:sticky;top:57px;height:calc(100vh - 57px);
+  overflow-y:auto;padding:28px 0;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.content{flex:1;min-width:0;padding:32px 0 80px}
+
+/* ── Nav ── */
+.nav-section{margin-bottom:20px}
+.nav-label{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 0 6px 0;display:block;
+}
+.nav-link{
+  display:block;padding:4px 0 4px 10px;font-size:12px;
+  color:var(--muted);text-decoration:none;
+  border-left:2px solid transparent;
+  transition:color .15s,border-color .15s;
+  line-height:1.4;
+}
+.nav-link:hover{color:var(--text);border-left-color:var(--border)}
+.nav-link.active{color:var(--accent);border-left-color:var(--accent)}
+
+/* ── Section headings ── */
+.section{margin-bottom:48px;scroll-margin-top:72px}
+.section-label{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:8px;
+}
+h2{font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:16px;color:var(--text)}
+h3{font-size:14px;font-weight:700;margin:24px 0 10px;color:var(--text)}
+p{color:#c9d1d9;margin-bottom:12px;line-height:1.65}
+p:last-child{margin-bottom:0}
+
+/* ── Cards ── */
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:8px;padding:20px 24px;margin-bottom:16px;
+}
+.card-title{font-size:13px;font-weight:700;margin-bottom:8px}
+
+/* ── Steps ── */
+.steps{display:flex;flex-direction:column;gap:0;margin:16px 0}
+.step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:#000;
+  font-size:13px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;
+}
+.step-body h4{font-size:13px;font-weight:700;margin-bottom:4px}
+.step-body p{margin-bottom:0;font-size:13px}
+
+/* ── Quick-start grid ── */
+.qs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.qs-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:18px 16px;text-align:center;
+}
+.qs-icon{font-size:26px;margin-bottom:10px}
+.qs-card h4{font-size:12px;font-weight:700;margin-bottom:6px}
+.qs-card p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}
+
+/* ── Reference table ── */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th{
+  text-align:left;padding:8px 12px;
+  background:var(--card2);color:var(--muted);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--card)}
+
+/* ── Inline badges / chips ── */
+.badge{
+  display:inline-block;padding:1px 6px;border-radius:3px;
+  font-size:11px;font-weight:700;font-family:monospace;
+  background:var(--card2);border:1px solid var(--border);
+  color:var(--text);vertical-align:middle;
+}
+.badge.accent{background:rgba(88,166,255,.12);border-color:rgba(88,166,255,.3);color:var(--accent)}
+.badge.green{background:rgba(63,185,80,.12);border-color:rgba(63,185,80,.3);color:var(--green)}
+.badge.orange{background:rgba(210,153,34,.12);border-color:rgba(210,153,34,.3);color:var(--orange)}
+.badge.red{background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.3);color:var(--red)}
+.badge.purple{background:rgba(163,113,247,.12);border-color:rgba(163,113,247,.3);color:var(--purple)}
+
+/* ── Color swatches ── */
+.swatch{
+  display:inline-block;width:10px;height:10px;
+  border-radius:50%;vertical-align:middle;margin-right:5px;
+}
+
+/* ── Code / console ── */
+code{
+  font-family:'Consolas','Courier New',monospace;
+  font-size:12px;background:var(--card2);
+  border:1px solid var(--border);border-radius:3px;
+  padding:1px 5px;color:#e6edf3;
+}
+.code-block{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:6px;padding:14px 16px;
+  font-family:'Consolas','Courier New',monospace;
+  font-size:12px;color:#e6edf3;line-height:1.8;
+  margin:10px 0;overflow-x:auto;
+}
+.code-block .cm{color:var(--muted)}
+.code-block .cv{color:var(--green)}
+.code-block .ck{color:var(--accent)}
+
+/* ── Callouts ── */
+.callout{
+  display:flex;gap:12px;padding:14px 16px;border-radius:6px;
+  margin:12px 0;font-size:13px;line-height:1.5;
+}
+.callout.info{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.25);color:#c9d1d9}
+.callout.tip{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.25);color:#c9d1d9}
+.callout.warn{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.25);color:#c9d1d9}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+
+/* ── Feature rows ── */
+.feature-row{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)}
+.feature-row:last-child{border-bottom:none}
+.feature-icon{font-size:20px;flex-shrink:0;width:32px;text-align:center;margin-top:2px}
+.feature-body h4{font-size:13px;font-weight:700;margin-bottom:4px}
+.feature-body p{font-size:13px;margin-bottom:0}
+
+/* ── Divider ── */
+hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* ── Mode diagram ── */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.mode-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:16px;
+}
+.mode-card.active{border-color:var(--accent)}
+.mode-card h4{font-size:12px;font-weight:700;margin-bottom:6px}
+.mode-card p{font-size:12px;color:var(--muted);margin:0}
+
+/* ── Priority diagram ── */
+.priority-demo{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:6px;overflow:hidden;margin:12px 0;font-size:12px;
+}
+.pd-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--border)}
+.pd-row:last-child{border-bottom:none}
+.pd-row.divider{background:rgba(210,153,34,.06);color:var(--orange);font-size:11px;justify-content:center;letter-spacing:.3px;border-top:1px dashed rgba(210,153,34,.4);border-bottom:1px dashed rgba(210,153,34,.4)}
+.pd-idx{min-width:22px;text-align:right;font-family:monospace;font-size:11px}
+.pd-idx.online{color:var(--green)}
+.pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pd-name{color:var(--muted);font-size:12px}
+
+/* ── Inline button replica ── */
+.ui-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:4px;font-size:11px;
+  border:1px solid var(--border);background:var(--card2);
+  color:var(--text);font-family:inherit;
+  vertical-align:middle;
+}
+.ui-btn.pri{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
+.ui-btn.ok{border-color:var(--green);color:var(--green)}
+.ui-btn.danger{border-color:var(--red);color:var(--red)}
+
+@media(max-width:768px){
+  .page{padding:0 16px;gap:0}
+  .sidebar{display:none}
+  .qs-grid{grid-template-columns:1fr}
+  .mode-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="brand">CS|Studio <span>Map Guide Tool</span> <small class="brand-sub">MGT</small></div>
+  </div>
+  <span class="header-badge">Help &amp; Documentation</span>
+  <div class="sp"></div>
+  <a href="index.html" class="back-btn">← Back to Tool</a>
+</header>
+
+<div class="page">
+
+  <!-- Sidebar Nav -->
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-section">
+      <span class="nav-label">Getting Started</span>
+      <a class="nav-link" href="#overview">Overview</a>
+      <a class="nav-link" href="#quickstart">Quick Start</a>
+      <a class="nav-link" href="#loading">Loading Files</a>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Core Features</span>
+      <a class="nav-link" href="#guide-modes">Guide Modes</a>
+      <a class="nav-link" href="#node-list">The Node List</a>
+      <a class="nav-link" href="#processing">Auto-Processing</a>
+      <a class="nav-link" href="#editing">Editing Nodes</a>
+      <a class="nav-link" href="#reordering">Reordering</a>
+      <a class="nav-link" href="#coordinates">Coordinates</a>
+      <a class="nav-link" href="#exporting">Exporting</a>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Reference</span>
+      <a class="nav-link" href="#node-types">Node Types</a>
+      <a class="nav-link" href="#color-scheme">Color Scheme</a>
+      <a class="nav-link" href="#settings">Settings</a>
+      <a class="nav-link" href="#cs2-console">CS2 Console</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content">
+
+    <!-- Overview -->
+    <section class="section" id="overview">
+      <div class="section-label">Introduction</div>
+      <h2>What is CS|Studio Map Guide Tool?</h2>
+      <p>The Map Guide Tool is a browser-based editor for CS2 KV3 annotation files — the format used by the game's workshop annotation system to display in-game guide overlays. It lets you load raw annotation files, automatically apply formatting rules, manually edit any node, reorder your lineup list, and export a clean, game-ready file.</p>
+      <p>Everything runs in the browser. No account required, no data is sent anywhere, and files never leave your computer.</p>
+
+      <div class="qs-grid">
+        <div class="qs-card">
+          <div class="qs-icon">📂</div>
+          <h4>Load</h4>
+          <p>Drag and drop your .txt annotation file onto the panel</p>
+        </div>
+        <div class="qs-card">
+          <div class="qs-icon">⚡</div>
+          <h4>Process</h4>
+          <p>One click auto-formats colors, throw types, and tags</p>
+        </div>
+        <div class="qs-card">
+          <div class="qs-icon">↓</div>
+          <h4>Export</h4>
+          <p>Download a clean, game-ready KV3 file</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="section" id="quickstart">
+      <div class="section-label">Getting Started</div>
+      <h2>Quick Start</h2>
+      <div class="card">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Choose your guide mode</h4>
+              <p>Use the <span class="ui-btn">⊟ Single Guide</span> / <span class="ui-btn">⊞ Dual Guide</span> toggle in the top-right to choose between a single annotation file or split CT + T files. Most creators start with Dual Guide for separate CT-side and T-side guides.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Load your file(s)</h4>
+              <p>Drag a <code>.txt</code> KV3 annotation file onto the drop zone, or click the zone to browse. In Dual Guide mode, load a CT-side file on the left and a T-side file on the right.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Process</h4>
+              <p>Click <span class="ui-btn pri">⚡ Process Both</span> in the header (or <span class="ui-btn">⚡ Process</span> on an individual panel) to automatically apply all formatting rules — colors, throw types, tag stripping, and text node merging.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Review and edit</h4>
+              <p>Click any node row to expand it and edit its title, description, color, grenade type, and more. Drag the <span style="color:var(--muted);font-size:13px">⠿</span> handle to reorder nodes.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>Export</h4>
+              <p>Click <span class="ui-btn ok">↓ Export</span> on the panel to download your processed file. Drop it into your CS2 workshop annotation folder.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading Files -->
+    <section class="section" id="loading">
+      <div class="section-label">Getting Started</div>
+      <h2>Loading Files</h2>
+      <p>Each panel accepts one <code>.txt</code> KV3 annotation file. There are two ways to load:</p>
+
+      <div class="feature-row">
+        <div class="feature-icon">🖱️</div>
+        <div class="feature-body">
+          <h4>Drag and drop</h4>
+          <p>Drag your annotation <code>.txt</code> file directly from File Explorer onto the panel's drop zone. The zone highlights in blue when a file is hovering over it.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">📁</div>
+        <div class="feature-body">
+          <h4>Click to browse</h4>
+          <p>Click anywhere on the drop zone to open a file picker. Select your <code>.txt</code> annotation file.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">✕</div>
+        <div class="feature-body">
+          <h4>Clear a file</h4>
+          <p>Once a file is loaded, a <span class="ui-btn danger">✕ Clear</span> button appears in the panel header. Click it to unload the file and return the panel to its empty state so you can load a different file.</p>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div>The Map Guide Tool expects standard CS2 KV3 annotation files as exported by the <code>annotation_create</code> console commands. The file should begin with a <code>&lt;!-- kv3 encoding:... --&gt;</code> header and contain <code>MapAnnotationNode</code> blocks.</div>
+      </div>
+    </section>
+
+    <!-- Guide Modes -->
+    <section class="section" id="guide-modes">
+      <div class="section-label">Core Features</div>
+      <h2>Guide Modes</h2>
+      <p>Use the mode toggle in the top-right corner to switch between how many guides you're working with.</p>
+
+      <div class="mode-grid">
+        <div class="mode-card active">
+          <h4>⊞ Dual Guide</h4>
+          <p>Two panels side by side — CT-side on the left, T-side on the right. Load a separate annotation file for each team. Nodes can be moved between panels. Process and export each file independently.</p>
+        </div>
+        <div class="mode-card">
+          <h4>⊟ Single Guide</h4>
+          <p>One full-width panel labeled "Guide." Use this when creating a unified annotation file that isn't split by team. The "Move to CT/T" option is hidden in this mode.</p>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>Switching modes doesn't discard loaded files — your data is preserved. You can toggle back and forth freely.</div>
+      </div>
+    </section>
+
+    <!-- Node List -->
+    <section class="section" id="node-list">
+      <div class="section-label">Core Features</div>
+      <h2>The Node List</h2>
+      <p>After loading a file, all annotation nodes appear as rows in the list. Each row shows at a glance:</p>
+
+      <table>
+        <thead>
+          <tr><th>Element</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="swatch" style="background:#58a6ff"></span> Color dot</td>
+            <td>The node's assigned color — smoke teal, flash amber, etc. Reflects the actual in-game color.</td>
+          </tr>
+          <tr>
+            <td><span class="badge">G</span> Type badge</td>
+            <td>Short code for the node type. See the <a href="#node-types" style="color:var(--accent)">Node Types Reference</a> below.</td>
+          </tr>
+          <tr>
+            <td><span class="badge green" style="font-family:monospace">0</span> Index</td>
+            <td>Node position in the file (0-based). Nodes 0–29 appear in <span style="color:var(--green)">green</span> — these are the first 30 and will be visible in online/competitive mode. Nodes 30+ only appear in Practice mode.</td>
+          </tr>
+          <tr>
+            <td>Title</td>
+            <td>The node's display title — what players see in-game.</td>
+          </tr>
+          <tr>
+            <td>Description snippet</td>
+            <td>A preview of the node's description text (truncated if long).</td>
+          </tr>
+          <tr>
+            <td><span class="ui-btn" style="font-size:10px">pos</span> <span class="ui-btn" style="font-size:10px">ang</span> <span class="ui-btn" style="font-size:10px">tp</span></td>
+            <td>Clipboard copy buttons for in-game console commands. See <a href="#coordinates" style="color:var(--accent)">Coordinates</a>.</td>
+          </tr>
+          <tr>
+            <td><span style="color:var(--muted)">▶</span> Expand arrow</td>
+            <td>Rotates 90° when a node is expanded. Click anywhere on the row (except buttons) to toggle the editor.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Online Priority Zone</h3>
+      <p>CS2 annotation guides have two limits:</p>
+      <table>
+        <thead><tr><th>Mode</th><th>Node Limit</th></tr></thead>
+        <tbody>
+          <tr><td>Practice</td><td>300 nodes total</td></tr>
+          <tr><td>Online / Competitive</td><td>First 30 nodes only</td></tr>
+        </tbody>
+      </table>
+      <p>The list displays an orange dashed divider between node 29 and node 30, making it immediately clear which nodes are online-visible. Use <a href="#reordering" style="color:var(--accent)">reordering</a> to promote your most important lineups into the top 30.</p>
+
+      <div class="priority-demo">
+        <div class="pd-row">
+          <span class="pd-idx online">28</span>
+          <span class="pd-dot" style="background:#1d9e75"></span>
+          <span class="pd-name">B Site Smoke (6.5s)</span>
+        </div>
+        <div class="pd-row">
+          <span class="pd-idx online">29</span>
+          <span class="pd-dot" style="background:#ffc300"></span>
+          <span class="pd-name">Window Flash (1.2s)</span>
+        </div>
+        <div class="pd-row divider">▲ nodes 0–29 visible online &nbsp;·&nbsp; node 30+ practice only</div>
+        <div class="pd-row">
+          <span class="pd-idx">30</span>
+          <span class="pd-dot" style="background:#dc501e"></span>
+          <span class="pd-name">Platform Molotov</span>
+        </div>
+        <div class="pd-row">
+          <span class="pd-idx">31</span>
+          <span class="pd-dot" style="background:#ff8c00"></span>
+          <span class="pd-name">Long Corner Pre-Aim</span>
+        </div>
+      </div>
+
+      <h3>Filtering and Search</h3>
+      <p>The toolbar above the list provides filters to isolate specific node types — All, Grenade, Position, Spot, or Text. Use the search box to filter by title or description text in real time.</p>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div>Drag-to-reorder works across all views, but moving a node while a filter is active will renumber based on the full list order — not just what's visible. The index badge always reflects the true file position.</div>
+      </div>
+    </section>
+
+    <!-- Processing -->
+    <section class="section" id="processing">
+      <div class="section-label">Core Features</div>
+      <h2>Auto-Processing</h2>
+      <p>Clicking <span class="ui-btn pri">⚡ Process</span> runs a five-pass formatter over all nodes. Each pass handles a different node type in order.</p>
+
+      <div class="card">
+        <div class="card-title">Pass 1 — Grenade main nodes</div>
+        <p style="margin-bottom:0;font-size:13px">Assigns the correct color based on grenade type (smoke, flash, molotov, etc.). Extracts the throw type from the last parenthetical in the title — for example, <code>B Site Smoke (6.5s) (Jump Throw)</code> becomes title <code>B Site Smoke (6.5s)</code> with description <code>Jump Throw</code>. Sets the <code>JumpThrow</code> flag automatically when the throw type implies a jump.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Pass 2 — Grenade aim targets</div>
+        <p style="margin-bottom:0;font-size:13px">Inherits color from the parent grenade node. Fills an empty aim instruction description with a hint from a nearby text node, or falls back to the throw type.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Pass 3 — Position nodes</div>
+        <p style="margin-bottom:0;font-size:13px">Assigns color by keyword in the title: <em>sound / cue / listen</em> → purple, <em>wallbang / bang</em> → gray, <em>plant / planting</em> → coral, everything else → gold. Strips group tag prefixes like <code>(LSW)</code> or <code>[CF]</code>. Merges the description of any text node within 150 units into an empty position description, then removes that text node.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Pass 4 — Spot nodes</div>
+        <p style="margin-bottom:0;font-size:13px">Sets all spot nodes to gray regardless of their original color.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Pass 5 — Text node cleanup</div>
+        <p style="margin-bottom:0;font-size:13px">Text nodes that are not titled <em>Tip</em> or <em>Guide By</em> are merged into the nearest aim target or position node (within 150 units) and then removed. Standalone text nodes and tip nodes are kept as-is.</p>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>Processing is non-destructive — it works on a copy of the node data. You can process multiple times without corrupting your file, and you can always manually override anything it changed.</div>
+      </div>
+    </section>
+
+    <!-- Editing -->
+    <section class="section" id="editing">
+      <div class="section-label">Core Features</div>
+      <h2>Editing Nodes</h2>
+      <p>Click any node row to expand its editor panel. All fields are editable at any time — before or after processing.</p>
+
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Title</strong></td>
+            <td>The main text displayed in-game for this node.</td>
+          </tr>
+          <tr>
+            <td><strong>Description</strong></td>
+            <td>Secondary text shown below the title. For grenade mains, this is the throw type instruction. For aim targets, it's the aim hint.</td>
+          </tr>
+          <tr>
+            <td><strong>Color</strong></td>
+            <td>Preset swatches for every standard node color, plus a custom color picker. Click a swatch to select it, or use the picker for any hex value.</td>
+          </tr>
+          <tr>
+            <td><strong>Grenade Type</strong> <span class="badge" style="font-size:10px">grenade main only</span></td>
+            <td>Changing this also updates the color to match the standard scheme for that grenade type.</td>
+          </tr>
+          <tr>
+            <td><strong>Jump Throw</strong> <span class="badge" style="font-size:10px">grenade main only</span></td>
+            <td>Toggles the <code>JumpThrow</code> flag. Enable this for any lineup that requires a jump while throwing.</td>
+          </tr>
+          <tr>
+            <td><strong>Enabled</strong></td>
+            <td>Controls whether the node is visible in-game. Uncheck to hide a node without deleting it.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Actions</h3>
+      <div class="feature-row">
+        <div class="feature-icon" style="font-size:14px"><span class="ui-btn pri" style="font-size:11px">Save</span></div>
+        <div class="feature-body">
+          <h4>Save</h4>
+          <p>Commits your field changes to the node and refreshes the list. Remember to Save before clicking away.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon" style="font-size:14px"><span class="ui-btn" style="font-size:11px">→ Move</span></div>
+        <div class="feature-body">
+          <h4>Move to CT / Move to T</h4>
+          <p><em>Dual Guide mode only.</em> Moves this node to the other panel, inserting it before the Guide By attribution node. The other panel must have a file loaded.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon" style="font-size:14px"><span class="ui-btn danger" style="font-size:11px">Delete</span></div>
+        <div class="feature-body">
+          <h4>Delete</h4>
+          <p>Permanently removes the node from the list after a confirmation prompt. This cannot be undone — reload the original file if you need to recover a deleted node.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reordering -->
+    <section class="section" id="reordering">
+      <div class="section-label">Core Features</div>
+      <h2>Reordering Nodes</h2>
+      <p>The order of nodes in the file determines which ones appear in online/competitive mode. Nodes 0–29 (the first 30) are visible everywhere. Nodes 30 and above only appear in Practice.</p>
+      <p>To reorder, grab the <span style="color:var(--muted);font-size:14px;font-weight:700">⠿</span> handle on the left side of any node row and drag it up or down to its new position. The list updates immediately and all index numbers renumber automatically.</p>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>Use the orange divider as a visual guide. Drag your highest-priority lineups — the ones you want available in competitive warmup or online play — above the divider into slots 0–29.</div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div>Grenade nodes typically come in groups of three: a <span class="badge">G</span> main node, a <span class="badge">GA</span> aim target, and a <span class="badge">GD</span> destination. Try to keep these groups together when reordering so the lineup displays correctly in-game.</div>
+      </div>
+    </section>
+
+    <!-- Coordinates -->
+    <section class="section" id="coordinates">
+      <div class="section-label">Core Features</div>
+      <h2>Copying Coordinates</h2>
+      <p>Every node that has a position recorded shows clipboard copy buttons on its row. These let you instantly teleport to a lineup position in CS2 for review or recording.</p>
+
+      <table>
+        <thead><tr><th>Button</th><th>Copies</th><th>Command</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="ui-btn" style="font-size:10px">pos</span></td>
+            <td>Position only</td>
+            <td><code>setpos X Y Z</code></td>
+          </tr>
+          <tr>
+            <td><span class="ui-btn" style="font-size:10px">ang</span></td>
+            <td>Angles only</td>
+            <td><code>setang pitch yaw roll</code></td>
+          </tr>
+          <tr>
+            <td><span class="ui-btn" style="font-size:10px">tp</span></td>
+            <td>Position + angles</td>
+            <td><code>setpos X Y Z; setang pitch yaw roll</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>How to use in CS2</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Open a practice server</h4>
+            <p>Launch CS2, open the developer console (<code>`</code> key), and load the map with <code>map de_dust2</code> (or your map).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Enable cheats</h4>
+            <p>Run <code>sv_cheats 1</code> in the console — required for teleport commands.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Copy and paste</h4>
+            <p>Click the <span class="ui-btn" style="font-size:10px">tp</span> button on any node in the tool, switch to CS2, open the console, paste with <code>Ctrl+V</code>, and press <code>Enter</code>. You'll teleport directly to that lineup position facing the aim spot.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <span class="cm">// Example — copied from a smoke node's tp button:</span><br>
+        <span class="ck">setpos</span> <span class="cv">-1245.31 892.40 64.03</span>; <span class="ck">setang</span> <span class="cv">-14.22 67.50 0.00</span>
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div>Clipboard access requires a secure (HTTPS) context. If you're running the tool locally via <code>file://</code>, copy buttons will silently fail. Host the tool on GitHub Pages or another HTTPS server for clipboard to work.</div>
+      </div>
+    </section>
+
+    <!-- Exporting -->
+    <section class="section" id="exporting">
+      <div class="section-label">Core Features</div>
+      <h2>Exporting Files</h2>
+      <p>Click the <span class="ui-btn ok">↓ Export</span> button on any panel to download the processed annotation file. The output includes the full KV3 wrapper (<code>MapName</code>, <code>WorkshopSubmissionID</code>, <code>ScreenText</code>) so it can be loaded directly into CS2 without any manual editing.</p>
+      <p>The exported filename appends <code>_processed</code> before the <code>.txt</code> extension so it doesn't overwrite your source file.</p>
+
+      <h3>Where to put the file</h3>
+      <p>Place the exported <code>.txt</code> in your CS2 annotation folder:</p>
+      <div class="code-block">
+        <span class="cm">// Default path:</span><br>
+        <span class="cv">Steam\steamapps\common\Counter-Strike Global Offensive\game\csgo\annotations\</span>
+      </div>
+      <p>Then load it in-game with the console command:</p>
+      <div class="code-block">
+        <span class="ck">map_annotations_load</span> <span class="cv">filename_without_extension</span>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div>To publish to the Steam Workshop, create a new workshop item of type <em>Annotation Guide</em>, upload your exported file, and paste the resulting <code>WorkshopSubmissionID</code> back into the Settings field before re-exporting.</div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- Node Types -->
+    <section class="section" id="node-types">
+      <div class="section-label">Reference</div>
+      <h2>Node Types</h2>
+      <p>Each node row displays a short type badge so you can identify it at a glance without expanding it.</p>
+
+      <table>
+        <thead><tr><th>Badge</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge">G</span></td>
+            <td>Grenade — Main</td>
+            <td>The throw position for a grenade lineup. Contains position, angles, grenade type, throw type, and JumpThrow flag.</td>
+          </tr>
+          <tr>
+            <td><span class="badge accent">GA</span></td>
+            <td>Grenade — Aim Target</td>
+            <td>The crosshair aim point for the lineup. References a master grenade node via <code>MasterNodeId</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="badge accent">GD</span></td>
+            <td>Grenade — Destination</td>
+            <td>Where the grenade lands. Used as a visual reference in the guide overlay.</td>
+          </tr>
+          <tr>
+            <td><span class="badge green">P</span></td>
+            <td>Position</td>
+            <td>A standing position — pre-aim spot, sound cue position, wallbang standing spot, or plant position.</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">S</span></td>
+            <td>Spot — Main</td>
+            <td>A spot marker used in wallbang groups or similar. Always gray.</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">SA</span></td>
+            <td>Spot — Aim Target</td>
+            <td>The aim point for a wallbang. References a master spot node.</td>
+          </tr>
+          <tr>
+            <td><span class="badge purple">T</span></td>
+            <td>Text</td>
+            <td>A floating text label. Kept if titled <em>Tip</em> or <em>Guide By</em>; otherwise merged into nearby nodes during processing.</td>
+          </tr>
+          <tr>
+            <td><span class="badge red">L</span></td>
+            <td>Line</td>
+            <td>A connector line between nodes. Rarely used directly.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Color Scheme -->
+    <section class="section" id="color-scheme">
+      <div class="section-label">Reference</div>
+      <h2>Color Scheme</h2>
+      <p>The Map Guide Tool uses a standardized color scheme across all maps. Colors are applied automatically during processing and can be customized in Settings.</p>
+
+      <table>
+        <thead><tr><th>Node Type</th><th>Color</th><th>RGB</th></tr></thead>
+        <tbody>
+          <tr><td>Smoke</td><td><span class="swatch" style="background:#1d9e75"></span> Teal</td><td><code>[29, 158, 117]</code></td></tr>
+          <tr><td>Flash</td><td><span class="swatch" style="background:#ffc300"></span> Amber</td><td><code>[255, 195, 0]</code></td></tr>
+          <tr><td>Molotov / Incendiary</td><td><span class="swatch" style="background:#dc501e"></span> Orange-Red</td><td><code>[220, 80, 30]</code></td></tr>
+          <tr><td>HE Grenade</td><td><span class="swatch" style="background:#c83c3c"></span> Red</td><td><code>[200, 60, 60]</code></td></tr>
+          <tr><td>Sound Position</td><td><span class="swatch" style="background:#864db7"></span> Purple</td><td><code>[134, 77, 183]</code></td></tr>
+          <tr><td>Wallbang / Spot</td><td><span class="swatch" style="background:#a0a0a0"></span> Gray</td><td><code>[160, 160, 160]</code></td></tr>
+          <tr><td>Plant Position</td><td><span class="swatch" style="background:#dc6450"></span> Coral</td><td><code>[220, 100, 80]</code></td></tr>
+          <tr><td>Pre-Aim / Movement</td><td><span class="swatch" style="background:#ffaf1e"></span> Gold</td><td><code>[255, 175, 30]</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Settings -->
+    <section class="section" id="settings">
+      <div class="section-label">Reference</div>
+      <h2>Settings</h2>
+      <p>Open Settings via the <span class="ui-btn">⚙ Settings</span> button in the header. All settings are saved automatically to your browser's local storage and persist across sessions.</p>
+
+      <h3>Colors tab</h3>
+      <p>Change the color assigned to each node type. Click a swatch to open a color picker. Changes take effect on the next processing run, or immediately for newly created nodes.</p>
+
+      <h3>Typography tab</h3>
+      <p>Control the font sizes and fade distances written to exported files. These values map directly to KV3 fields:</p>
+      <table>
+        <thead><tr><th>Setting</th><th>KV3 Field</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td>Title size / Desc size</td><td><code>FontSize</code></td><td>Text scale in the in-game overlay (default: 125 / 75)</td></tr>
+          <tr><td>Title in / Desc in</td><td><code>FadeInDist</code></td><td>Distance at which text begins to appear</td></tr>
+          <tr><td>Title out / Desc out</td><td><code>FadeOutDist</code></td><td>Distance at which text fades out. <code>-1</code> = always visible</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Throw Types tab</h3>
+      <p>Maps raw throw type text found in node titles to the formatted label written to the Description field. The left column is what the tool looks for (case-insensitive); the right column is what gets written. Add entries for any custom throw type abbreviations used in your recordings.</p>
+
+      <h3>Tag Prefixes tab</h3>
+      <p>Group tags like <code>(LSW)</code>, <code>[CF]</code>, or <code>(MDSFL)</code> are used during recording to link related nodes together. The tool strips these from titles during processing. Add any custom tags you use here so they are cleaned automatically.</p>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div>Use the <strong>Reset Defaults</strong> button at the bottom of the Settings modal to restore all values to factory defaults. This cannot be undone.</div>
+      </div>
+    </section>
+
+    <!-- CS2 Console -->
+    <section class="section" id="cs2-console">
+      <div class="section-label">Reference</div>
+      <h2>CS2 Console Commands</h2>
+      <p>Useful commands for working with annotation files in CS2:</p>
+
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>annotation_create grenade</code></td><td>Create a new grenade annotation node at your current position and view angle</td></tr>
+          <tr><td><code>annotation_create position "Name"</code></td><td>Create a new position node with the given name</td></tr>
+          <tr><td><code>annotation_create spot</code></td><td>Create a spot node pair (main + aim target)</td></tr>
+          <tr><td><code>annotation_create text "Title"</code></td><td>Create a floating text node</td></tr>
+          <tr><td><code>annotation_save filename</code></td><td>Save all current annotation nodes to a .txt file</td></tr>
+          <tr><td><code>map_annotations_load filename</code></td><td>Load an annotation file into the current session</td></tr>
+          <tr><td><code>sv_cheats 1</code></td><td>Required to use setpos / setang teleport commands</td></tr>
+          <tr><td><code>setpos X Y Z</code></td><td>Teleport to coordinates</td></tr>
+          <tr><td><code>setang pitch yaw roll</code></td><td>Set view angles</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>When recording a grenade node, stand at the throw position and face the aim spot before running <code>annotation_create grenade</code>. The node captures both your position and your view angle, which is exactly what the tool copies to clipboard.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// Active nav link on scroll
+var sections=document.querySelectorAll('.section[id]');
+var links=document.querySelectorAll('.nav-link');
+function onScroll(){
+  var scrollY=window.scrollY+80;
+  var current='';
+  sections.forEach(function(s){if(scrollY>=s.offsetTop)current=s.id;});
+  links.forEach(function(a){
+    a.classList.toggle('active',a.getAttribute('href')==='#'+current);
+  });
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+</script>
+</body>
+</html>
