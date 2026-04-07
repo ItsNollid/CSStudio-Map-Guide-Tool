@@ -20,7 +20,7 @@ A browser-based editor for CS2 KV3 annotation files. Create, edit, and manage in
 
 ## Quick Start
 
-1. Visit the [live tool](https://nollidofficial.github.io/CSStudio-Map-Guide-Tool/)
+1. Visit the [live tool](https://itsnollid.github.io/CSStudio-Map-Guide-Tool/)
 2. Drag and drop a CS2 KV3 annotation `.txt` file onto the drop zone
 3. Click **Process** to auto-format colors, throw types, and tags
 4. Edit nodes, reorder lineups, and verify positions on the map view
