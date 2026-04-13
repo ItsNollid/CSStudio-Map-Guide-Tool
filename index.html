@@ -184,8 +184,8 @@ header::after{content:'';position:absolute;inset:-1px 0 auto;height:1px;backgrou
 .cpip{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:width .25s cubic-bezier(.22,1,.36,1),height .25s cubic-bezier(.22,1,.36,1)}
 .tbadge{font-size:10px;padding:1px 4px;border-radius:3px;background:var(--card2);border:1px solid var(--border);font-weight:700;flex-shrink:0;min-width:20px;text-align:center;font-family:monospace;transition:font-size .25s cubic-bezier(.22,1,.36,1),padding .25s cubic-bezier(.22,1,.36,1),min-width .25s cubic-bezier(.22,1,.36,1)}
 .nidx{color:var(--muted);font-size:11px;flex-shrink:0;min-width:22px;text-align:right;font-family:monospace;transition:font-size .25s cubic-bezier(.22,1,.36,1),min-width .25s cubic-bezier(.22,1,.36,1)}
-.ntitle{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;transition:font-size .25s cubic-bezier(.22,1,.36,1)}
-.ndesc{color:var(--muted);font-size:11px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;transition:opacity .2s cubic-bezier(.22,1,.36,1),max-width .25s cubic-bezier(.22,1,.36,1),font-size .25s cubic-bezier(.22,1,.36,1)}
+.ntitle{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;transition:font-size .25s cubic-bezier(.22,1,.36,1);user-select:text}
+.ndesc{color:var(--muted);font-size:11px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;transition:opacity .2s cubic-bezier(.22,1,.36,1),max-width .25s cubic-bezier(.22,1,.36,1),font-size .25s cubic-bezier(.22,1,.36,1);user-select:text}
 .cbtn{font-size:10px;padding:1px 6px;border:1px solid var(--border);border-radius:3px;background:var(--card2);color:var(--muted);cursor:pointer;font-family:monospace;flex-shrink:0;transition:border-color .15s,color .15s,opacity .2s cubic-bezier(.22,1,.36,1),max-width .25s cubic-bezier(.22,1,.36,1),padding .25s cubic-bezier(.22,1,.36,1)}
 .cbtn:hover{border-color:var(--accent);color:var(--accent)}
 .cbtn.ok{border-color:var(--green)!important;color:var(--green)!important}
@@ -1683,7 +1683,7 @@ header{flex-wrap:nowrap;min-width:0}
         <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1px 0;overflow:hidden">
           <div class="crd-row" style="padding:8px 14px"><span class="crd-row-label">Purpose</span><span class="crd-row-val">Browser-based editor for CS2 KV3 annotation files — load, edit, and export workshop guide overlays without leaving the browser</span></div>
           <div class="crd-row" style="padding:8px 14px"><span class="crd-row-label">Technology</span><span class="crd-row-val">Vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies, no tracking. All processing happens locally.</span></div>
-          <div class="crd-row" style="padding:8px 14px"><span class="crd-row-label">Version</span><span class="crd-row-val" style="font-family:monospace">v1.0</span></div>
+          <div class="crd-row" style="padding:8px 14px"><span class="crd-row-label">Version</span><span class="crd-row-val" style="font-family:monospace">v1.1</span></div>
           <div class="crd-row" style="padding:8px 14px"><span class="crd-row-label">Platform</span><span class="crd-row-val">Any modern browser (Chrome, Edge, Firefox) — desktop recommended</span></div>
         </div>
       </div>
@@ -2366,6 +2366,17 @@ annotation_create grenade incendiary "CT Incendiary" float</div><p>The label goe
         <h2>Changelog</h2>
         <div class="hcard">
           <div class="cl-entry">
+            <div class="cl-ver">v1.1</div>
+            <div class="cl-item"><span class="cl-dot"></span>Inline aim &amp; throw extraction — processing now detects aim hints and throw types written directly in titles (not just in parentheses), e.g. "Cat Flash (1.4s) Aim at the eye of the Goose &amp; Left Click + Jump Throw"</div>
+            <div class="cl-item"><span class="cl-dot"></span>Destination and aim target nodes now display proper labels instead of "(untitled)" in the guide list</div>
+            <div class="cl-item"><span class="cl-dot"></span>Destination and aim target title/description fields are now read-only in the editor (inherited from parent node)</div>
+            <div class="cl-item"><span class="cl-dot"></span>Fixed toolbar disappearing when switching between CT and T side tabs in dual mode</div>
+            <div class="cl-item"><span class="cl-dot"></span>Reveal On Success checkbox now shows context-aware labels explaining how the feature works for each node type</div>
+            <div class="cl-item"><span class="cl-dot"></span>Text selection now works on node titles and descriptions in the guide list — drag-to-reorder restricted to the ⠿ handle</div>
+            <div class="cl-item"><span class="cl-dot"></span>Expanded default throw types to cover all key/state combinations — W/A/S/D, Shift, Crouch, Running modifiers with Left Click, Right Click, Middle Click, and Jump Throw actions</div>
+            <div class="cl-item"><span class="cl-dot"></span>Updated jump throw keyword detection for new modifier combinations</div>
+          </div>
+          <div class="cl-entry">
             <div class="cl-ver">v1.0</div>
             <div class="cl-item"><span class="cl-dot"></span>Official 1.0 release as CS|Studio Map Guide Tool</div>
             <div class="cl-item"><span class="cl-dot"></span>Full rebrand from NGT to CS|Studio — updated UI, help docs, format codes (now MGT_ prefix), and all internal references</div>
@@ -2532,19 +2543,52 @@ var DEFAULTS = {
     text_node:  {titleSize:125,titleFadeIn:800, titleFadeOut:-1,  descSize:75,descFadeIn:800, descFadeOut:-1}
   },
   throwTypes:[
+    // Base throws
     ['jumpthrow','Jump Throw'],['jump throw','Jump Throw'],
     ['left click','Left Click Throw'],['left click throw','Left Click Throw'],
-    ['right click','Right Click Throw'],
-    ['w + jump','W + Jump Throw'],['w+jump','W + Jump Throw'],
-    ['run + jump','Run + Jump Throw'],['run+jump','Run + Jump Throw'],
+    ['right click','Right Click Throw'],['right click throw','Right Click Throw'],
+    ['middle click','Middle Click Throw'],['middle click throw','Middle Click Throw'],
     ['running throw','Running Throw'],
+    // Directional throws (single key + throw)
+    ['w throw','W Throw'],['a throw','A Throw'],['s throw','S Throw'],['d throw','D Throw'],
+    // Single key + Jump Throw
+    ['w + jump','W + Jump Throw'],['w+jump','W + Jump Throw'],
+    ['a + jump','A + Jump Throw'],['a+jump','A + Jump Throw'],
+    ['s + jump','S + Jump Throw'],['s+jump','S + Jump Throw'],
+    ['d + jump','D + Jump Throw'],['d+jump','D + Jump Throw'],
+    ['crouch + jump','Crouch + Jump Throw'],['crouch+jump','Crouch + Jump Throw'],
+    ['shift + jump','Shift + Jump Throw'],['shift+jump','Shift + Jump Throw'],
+    ['run + jump','Run + Jump Throw'],['run+jump','Run + Jump Throw'],
     ['running + jump','Running + Jump Throw'],['running + jump throw','Running + Jump Throw'],
-    ['lmb + rmb + jump','LMB + RMB + Jump Throw'],
     ['slightly run + jump','Slightly Run + Jump Throw'],
+    // Single key + Left Click Throw
+    ['w + left click','W + Left Click Throw'],['w + left click throw','W + Left Click Throw'],
+    ['a + left click','A + Left Click Throw'],['a + left click throw','A + Left Click Throw'],
+    ['s + left click','S + Left Click Throw'],['s + left click throw','S + Left Click Throw'],
+    ['d + left click','D + Left Click Throw'],['d + left click throw','D + Left Click Throw'],
+    ['crouch + left click','Crouch + Left Click Throw'],['crouch + left click throw','Crouch + Left Click Throw'],
+    ['shift + left click','Shift + Left Click Throw'],['shift + left click throw','Shift + Left Click Throw'],
+    ['running + left click','Running + Left Click Throw'],['running + left click throw','Running + Left Click Throw'],
+    // Single key + Right Click Throw
+    ['w + right click','W + Right Click Throw'],['w + right click throw','W + Right Click Throw'],
+    ['a + right click','A + Right Click Throw'],['a + right click throw','A + Right Click Throw'],
+    ['s + right click','S + Right Click Throw'],['s + right click throw','S + Right Click Throw'],
+    ['d + right click','D + Right Click Throw'],['d + right click throw','D + Right Click Throw'],
+    ['crouch + right click','Crouch + Right Click Throw'],['crouch + right click throw','Crouch + Right Click Throw'],
+    ['shift + right click','Shift + Right Click Throw'],['shift + right click throw','Shift + Right Click Throw'],
+    ['running + right click','Running + Right Click Throw'],['running + right click throw','Running + Right Click Throw'],
+    // Click + Jump combos
     ['left click + jump','Left Click + Jump Throw'],['left click + jump throw','Left Click + Jump Throw'],
-    ['middle click + jump','Middle Click + Jump Throw'],
-    ['crouch + w + jump','Crouch + W + Jump Throw'],
-    ['w throw','W Throw']
+    ['right click + jump','Right Click + Jump Throw'],['right click + jump throw','Right Click + Jump Throw'],
+    ['middle click + jump','Middle Click + Jump Throw'],['middle click + jump throw','Middle Click + Jump Throw'],
+    ['lmb + rmb + jump','LMB + RMB + Jump Throw'],['lmb + rmb + jump throw','LMB + RMB + Jump Throw'],
+    // Multi-modifier combos
+    ['crouch + w + jump','Crouch + W + Jump Throw'],['crouch + w + jump throw','Crouch + W + Jump Throw'],
+    ['shift + w + jump','Shift + W + Jump Throw'],['shift + w + jump throw','Shift + W + Jump Throw'],
+    ['crouch + left click','Crouch + Left Click Throw'],
+    ['crouch + right click','Crouch + Right Click Throw'],
+    ['crouch + w + left click','Crouch + W + Left Click Throw'],
+    ['crouch + w + right click','Crouch + W + Right Click Throw']
   ],
   tagPrefixes:[],
   formats:{
@@ -2558,9 +2602,11 @@ var DEFAULTS = {
     groupTagSyntax:'curly'
   },
   jumpThrowKw:[
-    'jump throw','w + jump','run + jump','lmb + rmb + jump',
-    'slightly run + jump','left click + jump','middle click + jump',
-    'running + jump','crouch + w + jump'
+    'jump throw','w + jump','a + jump','s + jump','d + jump',
+    'crouch + jump','shift + jump','run + jump','running + jump',
+    'slightly run + jump','left click + jump','right click + jump',
+    'middle click + jump','lmb + rmb + jump',
+    'crouch + w + jump','shift + w + jump'
   ]
 };
 
@@ -2734,11 +2780,27 @@ function extractThrow(title){
       return[clean,formatThrow(c)];
     }
   }
+  // Inline fallback: match trailing throw phrases not in parentheses
+  var inlineThrowRe=/\b((?:(?:crouch|shift|walk|running?|slightly\s+run|w|a|s|d)\s*\+\s*)*(?:(?:left|right|middle)\s+click|lmb\s*\+\s*rmb|lmb|rmb)?\s*(?:\+\s*)?(?:jump\s+)?throw)\s*$/i;
+  var inlineM=title.match(inlineThrowRe);
+  if(inlineM){
+    var throwText=inlineM[1].trim();
+    var before=title.slice(0,inlineM.index).replace(/\s*&\s*$/,'').trim();
+    before=before.replace(/\s+Aim\s+(?:at|in|to|toward|towards|for|between|above|below|on)\b.*/i,'').trim();
+    return[before,formatThrow(throwText)];
+  }
   return[title,null];
 }
 function extractAimHint(title){
   var m; var re=/\(([^)]+)\)/g;
   while((m=re.exec(title))!==null) if(m[1].trim().toLowerCase().startsWith('aim '))return m[1].trim();
+  // Inline fallback: match "Aim at/in/to/..." not in parentheses
+  var inlineAimRe=/\b(Aim\s+(?:at|in|to|toward|towards|for|between|above|below|on)\b[^&]*)/i;
+  var aim=title.match(inlineAimRe);
+  if(aim){
+    var aimText=aim[1].replace(/\s*\b(?:(?:left|right|middle)\s+click|jump\s+throw|run\s+throw|w\s+throw|lmb|rmb).*$/i,'').trim();
+    return aimText;
+  }
   return null;
 }
 function formatThrow(raw){
@@ -2779,12 +2841,13 @@ function processNodes(nodes){
       var gt=(n.GrenadeType||'').toLowerCase();
       if(CFG.colors[gt]) n.Color=CFG.colors[gt].slice();
       if(fmt.stripGroupTags) n.Title_Text=stripGroupTagFromStr(n.Title_Text);
+      var origTitle=n.Title_Text;
       var res=extractThrow(n.Title_Text); var clean=res[0],tt=res[1];
       n.Title_Text=formatDuration(stripTags(clean));
       if(tt){
         var formatted=applyThrowTemplate(tt);
         if(!n.Desc_Text||/standing instructions/i.test(n.Desc_Text)) n.Desc_Text=formatted;
-        n.JumpThrow=isJumpThrow(tt); n._throw=formatted; n._aim=extractAimHint(n.Title_Text);
+        n.JumpThrow=isJumpThrow(tt); n._throw=formatted; n._aim=extractAimHint(origTitle);
       } else {
         n._throw=/standing instructions/i.test(n.Desc_Text)?null:(n.Desc_Text||null);
       }
@@ -3012,16 +3075,18 @@ function switchSideTab(side){
   gel('ct-phdr').style.display = showCt?'':'none';
   gel('ct-drop').style.display = showCt&&!S.ct.fname?'':'none';
   gel('ct-dz-alt').style.display = showCt&&!S.ct.fname?'':'none';
+  gel('ct-toolbar').style.display = '';
   if(showCt && S.ct.fname) gel('ct-toolbar').classList.add('on');
-  else gel('ct-toolbar').style.display = showCt?'':'none';
+  else gel('ct-toolbar').classList.remove('on');
   gel('ct-list').style.display = showCt?'':'none';
   // Toggle T content visibility
   var showT = (side==='t');
   gel('t-phdr').style.display = showT?'':'none';
   gel('t-drop').style.display = showT&&!S.t.fname?'':'none';
   gel('t-dz-alt').style.display = showT&&!S.t.fname?'':'none';
+  gel('t-toolbar').style.display = '';
   if(showT && S.t.fname) gel('t-toolbar').classList.add('on');
-  else gel('t-toolbar').style.display = showT?'':'none';
+  else gel('t-toolbar').classList.remove('on');
   gel('t-list').style.display = showT?'':'none';
   // Update map view side selector to match
   gel('mv-side-sel').value = side;
@@ -3366,7 +3431,13 @@ function setupListDelegation(side){
       toggleEditor(side, parseInt(card.dataset.idx), card);
     }
   });
+  list.addEventListener('mousedown', function(e){
+    list._dragOrigin = e.target;
+  });
   list.addEventListener('dragstart', function(e){
+    var origin = list._dragOrigin;
+    var fromHandle = origin && origin.closest('.drag-handle');
+    if(!fromHandle && !list.classList.contains('view-compact')){ e.preventDefault(); return; }
     var card = e.target.closest('.ncard[draggable]');
     if(card) ndragStart(e, side, parseInt(card.dataset.idx));
   });
@@ -3402,10 +3473,10 @@ function cardHtml(n,side,byId){
   var gBadge=gtag?'<span class="group-badge">{'+gtag+'}</span>':'';
   var isSel=SEL_MODE[side]&&SEL_SET[side][n._idx];
   var chk=SEL_MODE[side]?'<input type="checkbox" class="sel-check"'+(isSel?' checked':'')+' onclick="event.stopPropagation();toggleSelNode(\''+side+'\','+n._idx+',this)" title="Select node">':'';
-  var pt=parseGroupTag(n.Title_Text||'');
-  var displayTitle = pt.tag ? pt.clean : (n.Title_Text || (n.Type==='text'&&n.Desc_Text ? n.Desc_Text.substring(0,40) : '(untitled)'));
   var isDest=n.Type==='grenade'&&n.SubType==='destination';
   var isAim=n.SubType==='aim_target';
+  var pt=parseGroupTag(n.Title_Text||'');
+  var displayTitle = pt.tag ? pt.clean : (n.Title_Text || (isDest ? 'Destination' : (isAim ? 'Aim Target' : (n.Type==='text'&&n.Desc_Text ? n.Desc_Text.substring(0,40) : '(untitled)'))));
   var cardCls='ncard'+(isSel?' sel-selected':'')+(isDest?' dest':'')+(isAim?' aim':'');
   var badgeCls='tbadge'+(isDest?' dest':'')+(isAim?' aim':'');
   var parentLink='';
@@ -3451,6 +3522,9 @@ function toggleEditor(side,idx,card){
 function buildEditor(n,side){
   var div=document.createElement('div'); div.className='neditor';
   var isGM=n.Type==='grenade'&&n.SubType==='main';
+  var isDest=n.Type==='grenade'&&n.SubType==='destination';
+  var isAim=n.SubType==='aim_target';
+  var isChild=isDest||isAim;
   var pos=n.Position,ang=n.Angles;
   var sp=pos?'setpos '+pos.map(function(v){return(+v.toFixed(4))}).join(' '):'';
   var sa=ang?'setang '+ang.map(function(v){return(+v.toFixed(4))}).join(' '):'';
@@ -3465,10 +3539,11 @@ function buildEditor(n,side){
   div.innerHTML=
     '<div class="ef w2"><label class="el">Title</label>'
    +'<div style="display:flex;gap:5px;align-items:center">'
-   +'<input class="ei" id="eti" value="'+esc(n.Title_Text)+'" style="flex:1">'
-   +'<select class="throw-helper" id="ethrow" title="Append throw type to title"><option value="">Append throw…</option>'+throwOpts+'</select>'
+   +'<input class="ei" id="eti" value="'+esc(n.Title_Text)+'" style="flex:1"'+(isChild?' readonly title="Inherited from parent node"':'')+'>'
+   +(isChild?'':'<select class="throw-helper" id="ethrow" title="Append throw type to title"><option value="">Append throw…</option>'+throwOpts+'</select>')
    +'</div></div>'
-   +'<div class="ef w2"><label class="el">Description</label><input class="ei" id="edi" value="'+esc(n.Desc_Text)+'"></div>'
+   +'<div class="ef w2"><label class="el">Description</label><input class="ei" id="edi" value="'+esc(n.Desc_Text)+'"'+(isChild?' readonly title="Inherited from parent node"':'')+'></div>'
+   +(isChild?'<div style="font-size:10px;color:var(--muted);padding:0 0 4px 0">Title and description are inherited from the parent node</div>':'')
    +'<div class="ef w2"><label class="el">Color</label>'
    +'<div class="crow" id="ecrow">'+presets
    +'<input type="color" id="epick" value="'+cur+'" style="width:22px;height:22px;border:none;background:none;padding:0;cursor:pointer" title="Custom color">'
@@ -3502,7 +3577,19 @@ function buildEditor(n,side){
    +'<option value="right"'+(n.TextHorizontalAlign==='right'?' selected':'')+'>right</option>'
    +'</select></div>'
    +'<div class="ef"><label class="el">Reveal On Success</label>'
-   +'<div class="crow" style="padding:3px 0"><input type="checkbox" id="eros"'+(n.RevealOnSuccess?' checked':'')+'> <span style="color:var(--muted)">Show after completing step</span></div></div>'
+   +'<div class="crow" style="padding:3px 0"><input type="checkbox" id="eros"'+(n.RevealOnSuccess?' checked':'')+'> '
+   +'<span style="color:var(--muted)">'
+   +(isChild
+     ? 'Hidden until linked grenade lands successfully'
+     : (isGM ? 'Hide until linked grenade succeeds' : 'Hide until linked action succeeds'))
+   +'</span></div>'
+   +(isChild&&n.MasterNodeId
+     ? '<div style="font-size:10px;color:var(--muted);padding:2px 0">Linked to parent via MasterNodeId'+(n.DistanceThreshold!=null?' (threshold: '+n.DistanceThreshold+' units)':'')+'</div>'
+     : '')
+   +(!isChild&&!isGM
+     ? '<div style="font-size:10px;color:var(--muted);padding:2px 0">Only meaningful on child nodes (aim_target / destination) linked to a grenade</div>'
+     : '')
+   +'</div>'
    +(isGM?
      '<div class="ef"><label class="el">Grenade Type</label>'
      +'<select class="ei" id="egr">'+['smoke','flash','molotov','incendiary','he'].map(function(g){
@@ -6001,7 +6088,7 @@ regCmd('clearLog', function(args){
 }, 'clearLog — clear the console output');
 
 regCmd('version', function(args){
-  dcLog('info','CS|Studio · Map Guide Tool v1.0');
+  dcLog('info','CS|Studio · Map Guide Tool v1.1');
   dcLog('info','CSStudio Developer Console — build 2026');
 }, 'version — print tool version');
 
